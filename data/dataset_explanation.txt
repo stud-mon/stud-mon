@@ -1,1 +1,13 @@
-1. anxiety_level - 
+Standard Likert scale: Strongly Disagree → Strongly Agree:
+    headache, sleep_quality, breathing_problem, noise_level, living_conditions, 
+    safety, basic_needs, academic_performance, study_load, teacher_student_relationship, 
+    future_career_concerns, peer_pressure, bullying
+
+extracurricular_activities - Number of activities the student is involved in, not a likert scale:
+depression - PHQ-9 assessment tool
+anxiety_level - GAD-7 (Generalized Anxiety Disorder-7) scale
+self_esteem - Assessed via Rosenberg Self-Esteem Scale, which is a standard 10-item questionnaire
+mental_health_history - binary feature indicating whether the student has had any mental health issues in the past (0: No, 1: Yes)
+stress_level - target column
+
+blood_pressure - the frequency/intensity of blood-pressure–related symptoms caused by stress, rated on a 1–3 scale
