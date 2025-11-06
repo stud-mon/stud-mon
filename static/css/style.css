@@ -97,6 +97,8 @@ body {
     display: grid;
     grid-template-columns: 1fr;
     gap: 2rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .service-card {
@@ -105,6 +107,11 @@ body {
     padding: 2.5rem;
     box-shadow: var(--shadow-lg);
     transition: transform 0.3s, box-shadow 0.3s;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    grid-column: 1 / -1;
 }
 
 .service-card:hover {
@@ -480,6 +487,9 @@ body {
     margin: 2rem 0;
     border-radius: 12px;
     box-shadow: var(--shadow-sm);
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
 }
 
 .results-table {
@@ -488,6 +498,8 @@ body {
     background: var(--bg-white);
     border-radius: 12px;
     overflow: hidden;
+    display: table;
+    table-layout: auto;
 }
 
 .results-table thead {
@@ -497,7 +509,7 @@ body {
 
 .results-table th {
     padding: 1rem 1.5rem;
-    text-align: left;
+    text-align: center;
     font-weight: 600;
     font-size: 0.9rem;
     text-transform: uppercase;
@@ -508,6 +520,14 @@ body {
     padding: 1rem 1.5rem;
     border-bottom: 1px solid var(--border-color);
     color: var(--text-secondary);
+    white-space: nowrap;
+    text-align: center;
+}
+
+.results-table td:first-child {
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
 }
 
 .results-table tbody tr:hover {

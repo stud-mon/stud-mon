@@ -52,14 +52,17 @@
                 {% endif %}
 
                 {% if data %}
+                {% set important_columns = ['anxiety_level', 'depression', 'bullying', 'academic_performance', 'study_load'] %}
                 <div class="results-table-wrapper">
                     <table class="results-table">
                         <thead>
                             <tr>
                                 <th>№</th>
-                                {% for column in columns %}
-                                <th>{{ column }}</th>
-                                {% endfor %}
+                                <th>Тревога</th>
+                                <th>Депрессия</th>
+                                <th>Буллинг</th>
+                                <th>Успеваемость</th>
+                                <th>Учебная нагрузка</th>
                                 <th>Предсказание</th>
                             </tr>
                         </thead>
@@ -67,9 +70,11 @@
                             {% for row in data %}
                             <tr>
                                 <td>{{ loop.index }}</td>
-                                {% for column in columns %}
-                                <td>{{ row[column] }}</td>
-                                {% endfor %}
+                                <td>{{ row.get('anxiety_level', '') }}</td>
+                                <td>{{ row.get('depression', '') }}</td>
+                                <td>{{ row.get('bullying', '') }}</td>
+                                <td>{{ row.get('academic_performance', '') }}</td>
+                                <td>{{ row.get('study_load', '') }}</td>
                                 <td>
                                     <span class="prediction-badge prediction-{{ row['stress_level_prediction'] }}">
                                         {% if row['stress_level_prediction'] == 0 %}
