@@ -39,17 +39,23 @@ def index():
             predictions = pipeline.predict(df)
             df["stress_level_prediction"] = predictions
 
-            # Generating downloadable CSV
+            # Store results in session
+            session['results_data'] = df.to_dict('records')
+            session['results_columns'] = df.columns.tolist()
+            session['results_summary'] = {
+                'total': len(df),
+                'low': int((predictions == 0).sum()),
+                'medium': int((predictions == 1).sum()),
+                'high': int((predictions == 2).sum())
+            }
+
+            # Store CSV data for download
             output = BytesIO()
             df.to_csv(output, index=False)
             output.seek(0)
+            session['csv_data'] = output.getvalue()
 
-            return send_file(
-                output,
-                as_attachment=True,
-                download_name="stress_predictions.csv",
-                mimetype="text/csv"
-            )
+            return redirect(url_for('results'))
 
         # =====================================================
         # MANUAL SINGLE-STUDENT INPUT
@@ -69,7 +75,36 @@ def index():
 
 @app.route('/results')
 def results():
-    return render_template('results.html')
+    if 'results_data' not in session:
+        return redirect(url_for('index'))
+
+    data = session.get('results_data', [])
+    columns = session.get('results_columns', [])
+    summary = session.get('results_summary', {})
+    download_url = url_for('download_results')
+
+    return render_template('results.html',
+                         data=data,
+                         columns=columns,
+                         summary=summary,
+                         download_url=download_url)
+
+
+@app.route('/download')
+def download_results():
+    if 'csv_data' not in session:
+        return redirect(url_for('index'))
+
+    csv_data = session.get('csv_data')
+    output = BytesIO(csv_data)
+    output.seek(0)
+
+    return send_file(
+        output,
+        as_attachment=True,
+        download_name="stress_predictions.csv",
+        mimetype="text/csv"
+    )
 
 
 if __name__ == '__main__':
