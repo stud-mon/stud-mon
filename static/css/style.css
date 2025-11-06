@@ -318,6 +318,51 @@ body {
     line-height: 1.8;
 }
 
+.prediction-result {
+    text-align: center;
+    padding: 1.5rem 0;
+}
+
+.prediction-level {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.prediction-value {
+    font-size: 4rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.prediction-label {
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.prediction-description {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 8px;
+}
+
+.prediction-error {
+    text-align: center;
+    padding: 1.5rem;
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
 .footer {
     background: var(--text-primary);
     color: white;
