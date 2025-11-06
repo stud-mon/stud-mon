@@ -7,3 +7,4 @@ streamlit
 matplotlib
 seaborn
 xgboost
+Flask==3.0.0
