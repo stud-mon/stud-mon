@@ -107,12 +107,99 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const sortHeader = document.querySelector('.sortable');
     const tbody = document.getElementById('results-tbody');
+    const paginationWrapper = document.getElementById('pagination-wrapper');
+    const paginationInfo = document.getElementById('pagination-info');
+    const paginationPages = document.getElementById('pagination-pages');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    
+    let currentPage = 1;
+    const recordsPerPage = 15;
+    let allRows = [];
+    let sortDirection = null;
+    
+    function initializePagination() {
+        if (!tbody) return;
+        
+        allRows = Array.from(tbody.querySelectorAll('tr'));
+        const totalRecords = allRows.length;
+        
+        if (totalRecords > recordsPerPage) {
+            if (paginationWrapper) paginationWrapper.style.display = 'block';
+            showPage(1);
+        } else {
+            if (paginationWrapper) paginationWrapper.style.display = 'none';
+        }
+    }
+    
+    function showPage(page) {
+        if (!tbody) return;
+        
+        const totalRecords = allRows.length;
+        const totalPages = Math.ceil(totalRecords / recordsPerPage);
+        currentPage = Math.max(1, Math.min(page, totalPages));
+        
+        const startIndex = (currentPage - 1) * recordsPerPage;
+        const endIndex = startIndex + recordsPerPage;
+        
+        allRows.forEach((row, index) => {
+            if (index >= startIndex && index < endIndex) {
+                row.style.display = '';
+                const displayIndex = index + 1;
+                row.querySelector('td:first-child').textContent = displayIndex;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+        
+        if (paginationInfo) {
+            const start = startIndex + 1;
+            const end = Math.min(endIndex, totalRecords);
+            paginationInfo.textContent = `Показано ${start}-${end} из ${totalRecords} записей`;
+        }
+        
+        if (prevBtn) {
+            prevBtn.disabled = currentPage === 1;
+        }
+        
+        if (nextBtn) {
+            nextBtn.disabled = currentPage === totalPages;
+        }
+        
+        if (paginationPages) {
+            paginationPages.innerHTML = '';
+            const maxPages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxPages / 2));
+            let endPage = Math.min(totalPages, startPage + maxPages - 1);
+            
+            if (endPage - startPage < maxPages - 1) {
+                startPage = Math.max(1, endPage - maxPages + 1);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.type = 'button';
+                pageBtn.className = 'pagination-page-btn';
+                if (i === currentPage) {
+                    pageBtn.classList.add('active');
+                }
+                pageBtn.textContent = i;
+                pageBtn.addEventListener('click', () => showPage(i));
+                paginationPages.appendChild(pageBtn);
+            }
+        }
+    }
+    
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => showPage(currentPage - 1));
+    }
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => showPage(currentPage + 1));
+    }
     
     if (sortHeader && tbody) {
-        let sortDirection = null;
-        
         sortHeader.addEventListener('click', function() {
-            const rows = Array.from(tbody.querySelectorAll('tr'));
             const sortIcon = sortHeader.querySelector('.sort-icon');
             
             if (sortDirection === null || sortDirection === 'desc') {
@@ -123,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 sortIcon.textContent = '↓';
             }
             
-            rows.sort((a, b) => {
+            allRows.sort((a, b) => {
                 const aLevel = parseInt(a.getAttribute('data-stress-level'));
                 const bLevel = parseInt(b.getAttribute('data-stress-level'));
                 
@@ -134,11 +221,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             
-            rows.forEach((row, index) => {
-                row.querySelector('td:first-child').textContent = index + 1;
-                tbody.appendChild(row);
-            });
+            showPage(1);
         });
     }
+    
+    initializePagination();
 });
 
