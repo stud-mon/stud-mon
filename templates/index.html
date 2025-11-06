@@ -39,9 +39,13 @@
                             <span class="file-name-display" id="file-name-display" style="display: none;"></span>
                             <button type="button" class="file-clear-btn" id="file-clear-btn" style="display: none;" aria-label="Удалить файл">×</button>
                         </label>
-                        <input type="file" id="csv_file" name="csv_file" accept=".csv" required class="file-input">
+                        <input type="file" id="csv_file" name="csv_file" accept=".csv" class="file-input">
                     </div>
-                    <button type="submit" class="btn btn-primary">
+                    <div class="error-message" id="upload-error" style="display: none;">
+                        <span class="error-icon">⚠️</span>
+                        <span class="error-text" id="upload-error-text"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="upload-submit-btn">
                         <span>Загрузить и проанализировать</span>
                         <span class="btn-arrow">→</span>
                     </button>

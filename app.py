@@ -15,6 +15,15 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 PIPELINE_PATH = "pickles/pipeline.pkl"
 pipeline = joblib.load(PIPELINE_PATH)
 
+EXPECTED_FEATURES = [
+    'anxiety_level', 'self_esteem', 'mental_health_history', 'depression',
+    'headache', 'blood_pressure', 'sleep_quality', 'breathing_problem',
+    'noise_level', 'living_conditions', 'safety', 'basic_needs',
+    'academic_performance', 'study_load', 'teacher_student_relationship',
+    'future_career_concerns', 'social_support', 'peer_pressure',
+    'extracurricular_activities', 'bullying'
+]
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -26,20 +35,51 @@ def index():
         # =====================================================
         if form_type == 'upload':
             if 'csv_file' not in request.files:
-                return redirect(url_for('index'))
+                return jsonify({'error': True, 'message': 'Файл не был загружен. Пожалуйста, выберите CSV файл.'}), 400
 
             file = request.files['csv_file']
 
             if file.filename == '':
-                return redirect(url_for('index'))
+                return jsonify({'error': True, 'message': 'Файл не был выбран. Пожалуйста, выберите CSV файл для загрузки.'}), 400
 
-            df = pd.read_csv(file)
+            if not file.filename.lower().endswith('.csv'):
+                return jsonify({'error': True, 'message': 'Неверный тип файла. Пожалуйста, загрузите файл в формате CSV (.csv).'}), 400
 
-            # Pipeline handling preprocessing + prediction
-            predictions = pipeline.predict(df)
+            try:
+                df = pd.read_csv(file)
+            except Exception as e:
+                return jsonify({'error': True, 'message': f'Ошибка при чтении CSV файла: {str(e)}. Пожалуйста, убедитесь, что файл имеет правильный формат CSV.'}), 400
+
+            uploaded_features = set(df.columns.tolist())
+            expected_features_set = set(EXPECTED_FEATURES)
+
+            missing_features = expected_features_set - uploaded_features
+            extra_features = uploaded_features - expected_features_set
+
+            if missing_features or extra_features:
+                error_parts = []
+                if missing_features:
+                    missing_list = ', '.join(sorted(missing_features))
+                    error_parts.append(f'Отсутствующие столбцы: {missing_list}')
+                if extra_features:
+                    extra_list = ', '.join(sorted(extra_features))
+                    error_parts.append(f'Лишние столбцы: {extra_list}')
+                
+                error_message = 'Несоответствие столбцов в файле. ' + ' | '.join(error_parts) + f'. Ожидаемые столбцы: {", ".join(sorted(EXPECTED_FEATURES))}'
+                return jsonify({'error': True, 'message': error_message}), 400
+
+            try:
+                predictions = pipeline.predict(df)
+            except ValueError as e:
+                error_msg = str(e)
+                if 'Feature names' in error_msg or 'feature names' in error_msg:
+                    return jsonify({'error': True, 'message': f'Ошибка валидации данных: {error_msg}. Пожалуйста, убедитесь, что все столбцы соответствуют ожидаемым.'}), 400
+                return jsonify({'error': True, 'message': f'Ошибка при выполнении предсказания: {error_msg}'}), 400
+            except Exception as e:
+                return jsonify({'error': True, 'message': f'Произошла ошибка при обработке данных: {str(e)}'}), 500
+
             df["stress_level_prediction"] = predictions
 
-            # Store results in session
             session['results_data'] = df.to_dict('records')
             session['results_columns'] = df.columns.tolist()
             session['results_summary'] = {
@@ -49,13 +89,12 @@ def index():
                 'high': int((predictions == 2).sum())
             }
 
-            # Store CSV data for download
             output = BytesIO()
             df.to_csv(output, index=False)
             output.seek(0)
             session['csv_data'] = output.getvalue()
 
-            return redirect(url_for('results'))
+            return jsonify({'success': True, 'redirect': url_for('results')})
 
         # =====================================================
         # MANUAL SINGLE-STUDENT INPUT

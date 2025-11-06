@@ -43,6 +43,100 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    const uploadForm = document.getElementById('uploadForm');
+    const uploadError = document.getElementById('upload-error');
+    const uploadErrorText = document.getElementById('upload-error-text');
+    const uploadSubmitBtn = document.getElementById('upload-submit-btn');
+
+    function hideUploadError() {
+        if (uploadError) {
+            uploadError.style.display = 'none';
+        }
+    }
+
+    function showUploadError(message) {
+        if (uploadError && uploadErrorText) {
+            uploadErrorText.textContent = message;
+            uploadError.style.display = 'flex';
+            uploadError.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else {
+            console.error('Error elements not found:', { uploadError, uploadErrorText });
+        }
+    }
+
+    if (uploadForm) {
+        uploadForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            hideUploadError();
+            
+            const fileInput = document.getElementById('csv_file');
+            
+            if (!fileInput) {
+                showUploadError('Ошибка: поле загрузки файла не найдено.');
+                return;
+            }
+            
+            if (!fileInput.files || fileInput.files.length === 0) {
+                showUploadError('Файл не был выбран. Пожалуйста, выберите CSV файл для загрузки.');
+                fileInput.focus();
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                showUploadError('Файл не был выбран. Пожалуйста, выберите CSV файл для загрузки.');
+                fileInput.focus();
+                return;
+            }
+            
+            if (!file.name || !file.name.toLowerCase().endsWith('.csv')) {
+                showUploadError('Неверный тип файла. Пожалуйста, загрузите файл в формате CSV (.csv).');
+                return;
+            }
+
+            const formData = new FormData(uploadForm);
+            const originalButtonText = uploadSubmitBtn.innerHTML;
+            uploadSubmitBtn.disabled = true;
+            uploadSubmitBtn.innerHTML = '<span>Обработка...</span>';
+
+            try {
+                const response = await fetch('/', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                let data;
+                try {
+                    data = await response.json();
+                } catch (jsonError) {
+                    showUploadError('Сервер вернул неожиданный ответ. Пожалуйста, попробуйте еще раз.');
+                    return;
+                }
+
+                if (!response.ok || data.error) {
+                    showUploadError(data.message || 'Произошла ошибка при загрузке файла.');
+                } else if (data.success && data.redirect) {
+                    window.location.href = data.redirect;
+                } else {
+                    showUploadError('Неожиданный ответ от сервера.');
+                }
+            } catch (error) {
+                showUploadError('Произошла ошибка при отправке файла. Пожалуйста, попробуйте еще раз.');
+            } finally {
+                uploadSubmitBtn.disabled = false;
+                uploadSubmitBtn.innerHTML = originalButtonText;
+            }
+        });
+    }
+
+    if (csvFileInput) {
+        csvFileInput.addEventListener('change', function() {
+            hideUploadError();
+        });
+    }
+
     const manualForm = document.getElementById('manualForm');
     const manualResults = document.getElementById('manual-results');
     const predictionDisplay = document.getElementById('prediction-display');

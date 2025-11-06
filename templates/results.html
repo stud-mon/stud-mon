@@ -101,9 +101,17 @@
                         <span id="pagination-info">Показано 0 из 0 записей</span>
                     </div>
                     <div class="pagination-controls">
-                        <button type="button" class="pagination-btn" id="prev-btn" disabled>← Назад</button>
+                        <button type="button" class="pagination-btn pagination-nav" id="prev-btn" disabled aria-label="Предыдущая страница">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
                         <div class="pagination-pages" id="pagination-pages"></div>
-                        <button type="button" class="pagination-btn" id="next-btn">Вперед →</button>
+                        <button type="button" class="pagination-btn pagination-nav" id="next-btn" aria-label="Следующая страница">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
                     </div>
                 </div>
                 {% endif %}
