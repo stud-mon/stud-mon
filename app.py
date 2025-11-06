@@ -10,7 +10,6 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-# Load your saved pipeline (scaler + model inside)
 PIPELINE_PATH = "pickles/pipeline.pkl"
 pipeline = joblib.load(PIPELINE_PATH)
 
@@ -21,19 +20,46 @@ def index():
         form_type = request.form.get('form_type')
 
         # =====================================================
+        # MASS CSV UPLOAD PREDICTION
+        # =====================================================
+        if form_type == 'upload':
+            if 'csv_file' not in request.files:
+                return redirect(url_for('index'))
+
+            file = request.files['csv_file']
+
+            if file.filename == '':
+                return redirect(url_for('index'))
+
+            df = pd.read_csv(file)
+
+            # Pipeline handling preprocessing + prediction
+            predictions = pipeline.predict(df)
+            df["stress_level_prediction"] = predictions
+
+            # Generating downloadable CSV
+            output = BytesIO()
+            df.to_csv(output, index=False)
+            output.seek(0)
+
+            return send_file(
+                output,
+                as_attachment=True,
+                download_name="stress_predictions.csv",
+                mimetype="text/csv"
+            )
+
+        # =====================================================
         # MANUAL SINGLE-STUDENT INPUT
         # =====================================================
-        if form_type == 'manual':
-            # Extract all form fields except form_type
+        elif form_type == 'manual':
             form_data = {k: float(v) for k, v in request.form.items() if k != "form_type"}
 
-            # Convert to DataFrame
             df = pd.DataFrame([form_data])
 
-            # Predict using pipeline
+            # Predicting using pipeline
             prediction = pipeline.predict(df)[0]
 
-            # ✅ Send JSON (your JS will render it)
             return jsonify({"prediction": int(prediction)})
 
     return render_template('index.html')
