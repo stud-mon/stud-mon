@@ -3,172 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Предсказание уровня стресса</title>
+    <title>Student Stress Monitor - Анализ уровня стресса студентов</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div class="container main-container">
-        <h1>Предсказание уровня стресса студентов</h1>
-        <p>Загрузите CSV файл или введите данные вручную</p>
-        
-        <div class="form-section">
-            <h2>Загрузка CSV файла</h2>
-            <form method="POST" enctype="multipart/form-data" class="upload-form" id="uploadForm">
-                <input type="hidden" name="form_type" value="upload">
-                <div class="form-group">
-                    <label for="csv_file">Выберите CSV файл:</label>
-                    <input type="file" id="csv_file" name="csv_file" accept=".csv" required>
-                </div>
-                
-                <button type="submit" class="btn">Загрузить и предсказать</button>
-            </form>
-            
-            <div class="results-section" id="upload-results" style="display: none;">
-                <h3>Результаты предсказания</h3>
-                <div id="predictions-display">
-                </div>
-                <button type="button" class="btn btn-secondary" id="download-btn">Скачать результаты</button>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <h1>Student Stress Monitor</h1>
             </div>
         </div>
-        
-        <div class="form-section">
-            <h2>Ручной ввод данных</h2>
-            <form method="POST" class="manual-form" id="manualForm">
-                <input type="hidden" name="form_type" value="manual">
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="anxiety_level">Уровень тревоги (GAD-7):</label>
-                        <input type="number" id="anxiety_level" name="anxiety_level" min="0" max="21" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="self_esteem">Самооценка (Rosenberg):</label>
-                        <input type="number" id="self_esteem" name="self_esteem" min="0" max="30" required>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="mental_health_history">История психического здоровья:</label>
-                        <select id="mental_health_history" name="mental_health_history" required>
-                            <option value="0">Нет</option>
-                            <option value="1">Да</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="depression">Депрессия (PHQ-9):</label>
-                        <input type="number" id="depression" name="depression" min="0" max="27" required>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="headache">Головная боль:</label>
-                        <input type="number" id="headache" name="headache" min="1" max="5" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="blood_pressure">Артериальное давление:</label>
-                        <input type="number" id="blood_pressure" name="blood_pressure" min="1" max="3" required>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="sleep_quality">Качество сна:</label>
-                        <input type="number" id="sleep_quality" name="sleep_quality" min="1" max="5" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="breathing_problem">Проблемы с дыханием:</label>
-                        <input type="number" id="breathing_problem" name="breathing_problem" min="1" max="5" required>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="noise_level">Уровень шума:</label>
-                        <input type="number" id="noise_level" name="noise_level" min="1" max="5" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="living_conditions">Условия проживания:</label>
-                        <input type="number" id="living_conditions" name="living_conditions" min="1" max="5" required>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="safety">Безопасность:</label>
-                        <input type="number" id="safety" name="safety" min="1" max="5" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="basic_needs">Базовые потребности:</label>
-                        <input type="number" id="basic_needs" name="basic_needs" min="1" max="5" required>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="academic_performance">Академическая успеваемость:</label>
-                        <input type="number" id="academic_performance" name="academic_performance" min="1" max="5" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="study_load">Учебная нагрузка:</label>
-                        <input type="number" id="study_load" name="study_load" min="1" max="5" required>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="teacher_student_relationship">Отношения с преподавателями:</label>
-                        <input type="number" id="teacher_student_relationship" name="teacher_student_relationship" min="1" max="5" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="future_career_concerns">Беспокойство о будущей карьере:</label>
-                        <input type="number" id="future_career_concerns" name="future_career_concerns" min="1" max="5" required>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="social_support">Социальная поддержка:</label>
-                        <input type="number" id="social_support" name="social_support" min="1" max="5" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="peer_pressure">Давление сверстников:</label>
-                        <input type="number" id="peer_pressure" name="peer_pressure" min="1" max="5" required>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="extracurricular_activities">Внеучебная деятельность:</label>
-                        <input type="number" id="extracurricular_activities" name="extracurricular_activities" min="0" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="bullying">Травля:</label>
-                        <input type="number" id="bullying" name="bullying" min="1" max="5" required>
-                    </div>
-                </div>
-                
-                <button type="submit" class="btn">Получить предсказание</button>
-            </form>
-            
-            <div class="results-section" id="manual-results" style="display: none;">
-                <h3>Результат предсказания</h3>
-                <div id="prediction-display">
-                </div>
+    </header>
+
+    <main class="main-content">
+        <section class="hero">
+            <div class="hero-content">
+                <h2 class="hero-title">Анализ уровня стресса студентов</h2>
+                <p class="hero-description">Используйте машинное обучение для предсказания уровня стресса на основе психологических и академических показателей</p>
             </div>
+        </section>
+
+        <div class="content-wrapper">
+            <section id="upload" class="service-card">
+                <div class="card-header">
+                    <div class="card-icon">📊</div>
+                    <h2>Массовая обработка данных</h2>
+                    <p class="card-subtitle">Загрузите CSV файл для анализа множества записей</p>
+                </div>
+                <form method="POST" enctype="multipart/form-data" class="upload-form" id="uploadForm">
+                    <input type="hidden" name="form_type" value="upload">
+                    <div class="file-upload-wrapper">
+                        <label for="csv_file" class="file-label">
+                            <span class="file-icon">📁</span>
+                            <span class="file-text">Выберите CSV файл</span>
+                        </label>
+                        <input type="file" id="csv_file" name="csv_file" accept=".csv" required class="file-input">
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <span>Загрузить и проанализировать</span>
+                        <span class="btn-arrow">→</span>
+                    </button>
+                </form>
+                <div class="results-section" id="upload-results" style="display: none;">
+                    <div class="results-header">
+                        <h3>Результаты анализа</h3>
+                        <span class="results-badge">Готово</span>
+                    </div>
+                    <div id="predictions-display" class="predictions-content">
+                    </div>
+                    <button type="button" class="btn btn-secondary" id="download-btn">
+                        <span>📥 Скачать результаты</span>
+                    </button>
+                </div>
+            </section>
+
+            <section id="manual" class="service-card">
+                <div class="card-header">
+                    <div class="card-icon">✍️</div>
+                    <h2>Индивидуальный анализ</h2>
+                    <p class="card-subtitle">Введите данные студента для получения персонального прогноза</p>
+                </div>
+                <form method="POST" class="manual-form" id="manualForm">
+                    <input type="hidden" name="form_type" value="manual">
+                    
+                    <div class="form-section-title">Психологические показатели</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="anxiety_level">Уровень тревоги (GAD-7)</label>
+                            <input type="number" id="anxiety_level" name="anxiety_level" min="0" max="21" placeholder="0-21" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="self_esteem">Самооценка (Rosenberg)</label>
+                            <input type="number" id="self_esteem" name="self_esteem" min="0" max="30" placeholder="0-30" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="mental_health_history">История психического здоровья</label>
+                            <select id="mental_health_history" name="mental_health_history" required>
+                                <option value="">Выберите...</option>
+                                <option value="0">Нет</option>
+                                <option value="1">Да</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="depression">Депрессия (PHQ-9)</label>
+                            <input type="number" id="depression" name="depression" min="0" max="27" placeholder="0-27" required>
+                        </div>
+                    </div>
+
+                    <div class="form-section-title">Физические симптомы</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="headache">Головная боль</label>
+                            <input type="number" id="headache" name="headache" min="1" max="5" placeholder="1-5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="blood_pressure">Артериальное давление</label>
+                            <input type="number" id="blood_pressure" name="blood_pressure" min="1" max="3" placeholder="1-3" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="sleep_quality">Качество сна</label>
+                            <input type="number" id="sleep_quality" name="sleep_quality" min="1" max="5" placeholder="1-5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="breathing_problem">Проблемы с дыханием</label>
+                            <input type="number" id="breathing_problem" name="breathing_problem" min="1" max="5" placeholder="1-5" required>
+                        </div>
+                    </div>
+
+                    <div class="form-section-title">Условия жизни</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="noise_level">Уровень шума</label>
+                            <input type="number" id="noise_level" name="noise_level" min="1" max="5" placeholder="1-5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="living_conditions">Условия проживания</label>
+                            <input type="number" id="living_conditions" name="living_conditions" min="1" max="5" placeholder="1-5" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="safety">Безопасность</label>
+                            <input type="number" id="safety" name="safety" min="1" max="5" placeholder="1-5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="basic_needs">Базовые потребности</label>
+                            <input type="number" id="basic_needs" name="basic_needs" min="1" max="5" placeholder="1-5" required>
+                        </div>
+                    </div>
+
+                    <div class="form-section-title">Академическая среда</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="academic_performance">Академическая успеваемость</label>
+                            <input type="number" id="academic_performance" name="academic_performance" min="1" max="5" placeholder="1-5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="study_load">Учебная нагрузка</label>
+                            <input type="number" id="study_load" name="study_load" min="1" max="5" placeholder="1-5" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="teacher_student_relationship">Отношения с преподавателями</label>
+                            <input type="number" id="teacher_student_relationship" name="teacher_student_relationship" min="1" max="5" placeholder="1-5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="future_career_concerns">Беспокойство о будущей карьере</label>
+                            <input type="number" id="future_career_concerns" name="future_career_concerns" min="1" max="5" placeholder="1-5" required>
+                        </div>
+                    </div>
+
+                    <div class="form-section-title">Социальные факторы</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="social_support">Социальная поддержка</label>
+                            <input type="number" id="social_support" name="social_support" min="1" max="5" placeholder="1-5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="peer_pressure">Давление сверстников</label>
+                            <input type="number" id="peer_pressure" name="peer_pressure" min="1" max="5" placeholder="1-5" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="extracurricular_activities">Внеучебная деятельность</label>
+                            <input type="number" id="extracurricular_activities" name="extracurricular_activities" min="0" placeholder="Количество" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="bullying">Травля</label>
+                            <input type="number" id="bullying" name="bullying" min="1" max="5" placeholder="1-5" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <span>Получить прогноз</span>
+                        <span class="btn-arrow">→</span>
+                    </button>
+                </form>
+                <div class="results-section" id="manual-results" style="display: none;">
+                    <div class="results-header">
+                        <h3>Результат анализа</h3>
+                        <span class="results-badge">Готово</span>
+                    </div>
+                    <div id="prediction-display" class="prediction-content">
+                    </div>
+                </div>
+            </section>
         </div>
-    </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Student Stress Monitor. Система анализа уровня стресса на основе машинного обучения.</p>
+        </div>
+    </footer>
+
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
