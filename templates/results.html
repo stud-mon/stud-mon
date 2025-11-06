@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Результаты анализа - Student Stress Monitor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <h1>Student Stress Monitor</h1>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="hero">
+            <div class="hero-content">
+                <h2 class="hero-title">Результаты анализа</h2>
+                <p class="hero-description">Просмотрите предсказания уровня стресса для загруженных данных</p>
+            </div>
+        </section>
+
+        <div class="content-wrapper">
+            <section class="service-card">
+                <div class="results-header">
+                    <h2>Результаты предсказания</h2>
+                    <span class="results-badge">Готово</span>
+                </div>
+
+                {% if summary %}
+                <div class="results-summary">
+                    <div class="summary-item">
+                        <span class="summary-label">Всего записей</span>
+                        <span class="summary-value">{{ summary.total }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Низкий уровень</span>
+                        <span class="summary-value summary-low">{{ summary.low }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Средний уровень</span>
+                        <span class="summary-value summary-medium">{{ summary.medium }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Высокий уровень</span>
+                        <span class="summary-value summary-high">{{ summary.high }}</span>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if data %}
+                <div class="results-table-wrapper">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>№</th>
+                                {% for column in columns %}
+                                <th>{{ column }}</th>
+                                {% endfor %}
+                                <th>Предсказание</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in data %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                {% for column in columns %}
+                                <td>{{ row[column] }}</td>
+                                {% endfor %}
+                                <td>
+                                    <span class="prediction-badge prediction-{{ row['stress_level_prediction'] }}">
+                                        {% if row['stress_level_prediction'] == 0 %}
+                                            Низкий
+                                        {% elif row['stress_level_prediction'] == 1 %}
+                                            Средний
+                                        {% else %}
+                                            Высокий
+                                        {% endif %}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+
+                <div class="results-actions">
+                    <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                        <span>← Вернуться на главную</span>
+                    </a>
+                    {% if download_url %}
+                    <a href="{{ download_url }}" class="btn btn-primary" download>
+                        <span>📥 Скачать результаты (CSV)</span>
+                        <span class="btn-arrow">→</span>
+                    </a>
+                    {% endif %}
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>2025 Student Stress Monitor. Система анализа уровня стресса на основе машинного обучения.</p>
+            <p class="footer-university">&copy; Московский Университет имени С.Ю. Витте</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
+

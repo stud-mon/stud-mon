@@ -1,12 +1,14 @@
-from flask import Flask, render_template, request, redirect, url_for, send_file, jsonify
+from flask import Flask, render_template, request, redirect, url_for, send_file, jsonify, session
 import os
 import pandas as pd
 import joblib
 from io import BytesIO
+import json
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+app.config['SECRET_KEY'] = 'your-secret-key-here-change-in-production'
 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
@@ -63,6 +65,11 @@ def index():
             return jsonify({"prediction": int(prediction)})
 
     return render_template('index.html')
+
+
+@app.route('/results')
+def results():
+    return render_template('results.html')
 
 
 if __name__ == '__main__':
