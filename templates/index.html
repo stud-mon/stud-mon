@@ -25,11 +25,18 @@
 
         <section class="info-section">
             <div class="info-container">
-                <div class="info-header">
-                    <div class="info-icon">ℹ️</div>
-                    <h3>Важная информация</h3>
+                <div class="info-header" id="info-header">
+                    <div class="info-header-left">
+                        <div class="info-icon">ℹ️</div>
+                        <h3>Важная информация</h3>
+                    </div>
+                    <button type="button" class="info-toggle" id="info-toggle" aria-label="Развернуть/свернуть">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
                 </div>
-                <div class="info-content">
+                <div class="info-content" id="info-content" style="display: none;">
                     <div class="info-block">
                         <h4>Формат файла</h4>
                         <p>Загружайте файлы в формате <strong>CSV</strong> с кодировкой UTF-8. Файл должен содержать следующие столбцы:</p>
