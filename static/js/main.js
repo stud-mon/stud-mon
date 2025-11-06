@@ -1,4 +1,48 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const csvFileInput = document.getElementById('csv_file');
+    const fileNameDisplay = document.getElementById('file-name-display');
+    const fileText = document.getElementById('file-text');
+    const fileIcon = document.getElementById('file-icon');
+    const fileLabel = document.getElementById('file-label');
+    const fileClearBtn = document.getElementById('file-clear-btn');
+
+    function clearFile() {
+        csvFileInput.value = '';
+        fileText.style.display = 'block';
+        fileIcon.style.display = 'block';
+        fileNameDisplay.style.display = 'none';
+        fileClearBtn.style.display = 'none';
+        fileLabel.classList.remove('file-selected');
+    }
+
+    function showFile(file) {
+        fileNameDisplay.textContent = file.name;
+        fileText.style.display = 'none';
+        fileIcon.style.display = 'none';
+        fileNameDisplay.style.display = 'block';
+        fileClearBtn.style.display = 'block';
+        fileLabel.classList.add('file-selected');
+    }
+
+    if (csvFileInput && fileNameDisplay) {
+        csvFileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                showFile(file);
+            } else {
+                clearFile();
+            }
+        });
+
+        if (fileClearBtn) {
+            fileClearBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                clearFile();
+            });
+        }
+    }
+
     const manualForm = document.getElementById('manualForm');
     const manualResults = document.getElementById('manual-results');
     const predictionDisplay = document.getElementById('prediction-display');

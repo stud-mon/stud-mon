@@ -33,9 +33,11 @@
                 <form method="POST" enctype="multipart/form-data" class="upload-form" id="uploadForm">
                     <input type="hidden" name="form_type" value="upload">
                     <div class="file-upload-wrapper">
-                        <label for="csv_file" class="file-label">
-                            <span class="file-icon">📁</span>
-                            <span class="file-text">Выберите CSV файл</span>
+                        <label for="csv_file" class="file-label" id="file-label">
+                            <span class="file-icon" id="file-icon">📁</span>
+                            <span class="file-text" id="file-text">Выберите CSV файл</span>
+                            <span class="file-name-display" id="file-name-display" style="display: none;"></span>
+                            <button type="button" class="file-clear-btn" id="file-clear-btn" style="display: none;" aria-label="Удалить файл">×</button>
                         </label>
                         <input type="file" id="csv_file" name="csv_file" accept=".csv" required class="file-input">
                     </div>
