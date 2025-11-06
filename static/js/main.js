@@ -104,5 +104,41 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    const sortHeader = document.querySelector('.sortable');
+    const tbody = document.getElementById('results-tbody');
+    
+    if (sortHeader && tbody) {
+        let sortDirection = null;
+        
+        sortHeader.addEventListener('click', function() {
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            const sortIcon = sortHeader.querySelector('.sort-icon');
+            
+            if (sortDirection === null || sortDirection === 'desc') {
+                sortDirection = 'asc';
+                sortIcon.textContent = '↑';
+            } else {
+                sortDirection = 'desc';
+                sortIcon.textContent = '↓';
+            }
+            
+            rows.sort((a, b) => {
+                const aLevel = parseInt(a.getAttribute('data-stress-level'));
+                const bLevel = parseInt(b.getAttribute('data-stress-level'));
+                
+                if (sortDirection === 'asc') {
+                    return aLevel - bLevel;
+                } else {
+                    return bLevel - aLevel;
+                }
+            });
+            
+            rows.forEach((row, index) => {
+                row.querySelector('td:first-child').textContent = index + 1;
+                tbody.appendChild(row);
+            });
+        });
+    }
 });
 

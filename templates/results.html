@@ -63,12 +63,15 @@
                                 <th>Буллинг</th>
                                 <th>Успеваемость</th>
                                 <th>Учебная нагрузка</th>
-                                <th>Предсказание</th>
+                                <th class="sortable" data-sort="stress">
+                                    Предсказание
+                                    <span class="sort-icon">↕</span>
+                                </th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="results-tbody">
                             {% for row in data %}
-                            <tr>
+                            <tr data-stress-level="{{ row['stress_level_prediction'] }}">
                                 <td>{{ loop.index }}</td>
                                 <td>{{ row.get('anxiety_level', '') }}</td>
                                 <td>{{ row.get('depression', '') }}</td>
