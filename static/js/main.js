@@ -338,7 +338,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 infoHeader.classList.remove('expanded');
                 if (infoSection) infoSection.classList.remove('expanded');
             } else {
-                infoContent.style.display = 'flex';
+                infoContent.style.display = 'grid';
                 infoHeader.classList.add('expanded');
                 if (infoSection) infoSection.classList.add('expanded');
             }

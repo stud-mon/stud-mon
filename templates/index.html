@@ -10,7 +10,10 @@
     <header class="header">
         <div class="header-container">
             <div class="logo">
-                <h1>Student Stress Monitor</h1>
+                <h1>Мониторинг Стресса Студентов</h1>
+            </div>
+            <div class="header-copyright">
+                <span>© Московский университет имени С.Ю. Витте</span>
             </div>
         </div>
     </header>
@@ -19,16 +22,17 @@
         <section class="hero">
             <div class="hero-content">
                 <h2 class="hero-title">Анализ уровня стресса студентов</h2>
-                <p class="hero-description">Используйте машинное обучение для предсказания уровня стресса на основе психологических и академических показателей</p>
+                <p class="hero-description">Используйте машинное обучение для предсказания уровня стресса на основе психологических и академических показателей студентов</p>
             </div>
         </section>
 
-        <section class="info-section">
-            <div class="info-container">
+        <div class="content-wrapper">
+            <section class="info-section">
                 <div class="info-header" id="info-header">
                     <div class="info-header-left">
                         <div class="info-icon">ℹ️</div>
                         <h3>Важная информация</h3>
+                        <span class="info-expand-hint">Нажмите, чтобы развернуть</span>
                     </div>
                     <button type="button" class="info-toggle" id="info-toggle" aria-label="Развернуть/свернуть">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -37,40 +41,31 @@
                     </button>
                 </div>
                 <div class="info-content" id="info-content" style="display: none;">
-                    <div class="info-block">
-                        <h4>Формат файла</h4>
-                        <p>Загружайте файлы в формате <strong>CSV</strong> с кодировкой UTF-8. Файл должен содержать следующие столбцы:</p>
-                    </div>
-                    <div class="info-block">
+                    <div class="info-block info-block-full">
                         <h4>Столбцы с шкалой Лайкерта (1-5)</h4>
                         <p class="info-columns">headache, sleep_quality, breathing_problem, noise_level, living_conditions, safety, basic_needs, academic_performance, study_load, teacher_student_relationship, future_career_concerns, peer_pressure, bullying</p>
                         <p class="info-note">Где 1 = Полностью не согласен, 5 = Полностью согласен</p>
-                    </div>
-                    <div class="info-block">
-                        <h4>Специальные столбцы</h4>
+                        
+                        <h4 style="margin-top: 2rem;">Специальные столбцы</h4>
                         <ul class="info-list">
                             <li><strong>anxiety_level</strong> - Шкала GAD-7 (0-21)</li>
                             <li><strong>depression</strong> - Инструмент оценки PHQ-9 (0-27)</li>
                             <li><strong>self_esteem</strong> - Шкала самооценки Розенберга (0-30)</li>
                             <li><strong>mental_health_history</strong> - История психического здоровья (0: Нет, 1: Да)</li>
-                            <li><strong>blood_pressure</strong> - Симптомы, связанные с артериальным давлением (1-3)</li>
+                            <li><strong>blood_pressure</strong> - Частота симптомов связанных с артериальным давлением (1-3)</li>
                             <li><strong>extracurricular_activities</strong> - Количество внеучебных активностей (число)</li>
                         </ul>
                     </div>
-                    <div class="info-block info-warning">
-                        <h4>⚠️ Требования</h4>
-                        <p>Все столбцы должны присутствовать в файле. Названия столбцов должны точно соответствовать указанным выше (регистр важен).</p>
-                    </div>
                 </div>
-            </div>
-        </section>
-
-        <div class="content-wrapper">
+            </section>
+            
             <section id="upload" class="service-card">
                 <div class="card-header">
                     <div class="card-icon">📊</div>
-                    <h2>Массовая обработка данных</h2>
-                    <p class="card-subtitle">Загрузите CSV файл для анализа множества записей</p>
+                    <div class="card-header-content">
+                        <h2>Массовая обработка данных</h2>
+                        <p class="card-subtitle">Загрузите CSV файл для анализа множества записей</p>
+                    </div>
                 </div>
                 <form method="POST" enctype="multipart/form-data" class="upload-form" id="uploadForm">
                     <input type="hidden" name="form_type" value="upload">
@@ -92,6 +87,10 @@
                         <span class="btn-arrow">→</span>
                     </button>
                 </form>
+                <div class="info-block upload-warning">
+                    <h4>Требования</h4>
+                    <p>Все столбцы должны присутствовать в файле. Названия столбцов должны точно соответствовать указанным выше (регистр важен).</p>
+                </div>
                 <div class="results-section" id="upload-results" style="display: none;">
                     <div class="results-header">
                         <h3>Результаты анализа</h3>
@@ -108,8 +107,10 @@
             <section id="manual" class="service-card">
                 <div class="card-header">
                     <div class="card-icon">✍️</div>
-                    <h2>Индивидуальный анализ</h2>
-                    <p class="card-subtitle">Введите данные студента для получения персонального прогноза</p>
+                    <div class="card-header-content">
+                        <h2>Индивидуальный анализ</h2>
+                        <p class="card-subtitle">Введите данные студента для получения персонального прогноза</p>
+                    </div>
                 </div>
                 <form method="POST" class="manual-form" id="manualForm">
                     <input type="hidden" name="form_type" value="manual">
@@ -240,7 +241,7 @@
     <footer class="footer">
         <div class="footer-content">
             <p>2025 Student Stress Monitor. Система анализа уровня стресса на основе машинного обучения.</p>
-            <p class="footer-university">&copy; Московский Университет имени С.Ю. Витте</p>
+            <p class="footer-university">&copy; Московский университет имени С.Ю. Витте</p>
         </div>
     </footer>
 
